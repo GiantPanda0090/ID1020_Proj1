@@ -26,7 +26,9 @@ package lab_1_Maven;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.StdIn;
 import edu.princeton.cs.introcs.StdOut;
+import proj1.TinySearchEngine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -37,22 +39,20 @@ public class BinarySearch {
     }
 public static int counter =0;
         // return the index of the key in the sorted array a[]; -1 if not found
-        public static int search(String key, String[] a) {
-            return search(key, a, 0, a.length);
-        }
-        public static int search(String key, String[] a, int lo, int hi) {
+        public static int search(String key, ArrayList<TinySearchEngine.Node> a) {return search(key, a, 0, a.size());}
+        public static int search(String key, ArrayList<TinySearchEngine.Node> a, int lo, int hi) {
             counter++;
             // possible key indices in [lo, hi)
             if (hi <= lo) return -1;
             int mid = lo + (hi - lo) / 2;
-            int cmp = a[mid].compareTo(key);
+            int cmp = a.get(mid).word.toString().compareTo(key);
             if      (cmp > 0) return search(key, a, lo, mid);
             else if (cmp < 0) return search(key, a, mid+1, hi);
             else              return mid;
         }
 
 
-        // whitelist, exception filter
+/*        // whitelist, exception filter
         public static void main(String[] args) {
 
 
@@ -86,7 +86,7 @@ public static int counter =0;
                 }
                 System.out.print("Time consuming is:"+ counter);
             }
-        }
+        }*/
     }
 
 
