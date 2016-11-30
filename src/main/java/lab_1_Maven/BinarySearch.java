@@ -45,7 +45,8 @@ public static int counter =0;
             // possible key indices in [lo, hi)
             if (hi <= lo) return -1;
             int mid = lo + (hi - lo) / 2;
-            int cmp = a.get(mid).word.toString().compareTo(key);
+           //System.out.println(a.get(mid).word.word + " : "+ key);
+            int cmp = a.get(mid).word.word.compareTo(key);
             if      (cmp > 0) return search(key, a, lo, mid);
             else if (cmp < 0) return search(key, a, mid+1, hi);
             else              return mid;
