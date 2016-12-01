@@ -26,12 +26,15 @@ public class TinySearchEngine implements TinySearchEngineBase{
 
     public void insert(Word word, Attributes attributes) {
          Node input = new Node(word,attributes);
+
         nodList.add(input);
+   // nodList.add(input);
 
 
     }
-    String property;
-    String direction;
+
+    String property="";
+    String direction="";
     public List<Document> search(String s) {
         BinarySearch find = new BinarySearch();
         List<Document> result = new ArrayList<Document>();
@@ -46,9 +49,9 @@ public class TinySearchEngine implements TinySearchEngineBase{
                 a = find.searcharr("popularity", filter);
             } else if (a == -1) {
                 a = find.searcharr("occurrence", filter);
-            } else {
-                property = filter[a];
             }
+                property = filter[a];
+
             int b = find.searcharr("asc", filter);
             if (b == -1) {
                 find.searcharr("desc", filter);
@@ -56,49 +59,42 @@ public class TinySearchEngine implements TinySearchEngineBase{
                 direction = filter[b];
             }
         }
-
         Collections.sort(nodList, new Comparator<Node>() {
             public int compare(Node node1, Node node2) {
                 return node1.word.word.compareTo(node2.word.word);
             }
         });
-        //sortcounter++;
         backup = nodList;
         return search(str, result,nodeResult,0);
     }
-        public List<Document> search(String str[], List<Document> result,  List<Node> nodeResult,int j) {
+        public List<Document> search(String str[], final List<Document> result,  List<Node> nodeResult,int j) {
         BinarySearch find = new BinarySearch();
 
         for(int i =0;i<nodList.size();i++) {
              int  f= find.search(str[j], nodList);
                 if (f == -1) {
-                   // result= new ArrayList<Document>(nodeResult.att)
-                    Collections.sort(result, new Comparator<Document>() {
+
+                    Set<Document> hs = new HashSet<Document>(result);
+                    List<Document> b = new ArrayList<Document>(hs);
+                    if(property.equals("count") ){
+                    Collections.sort(b, new Comparator<Document>() {
                         public int compare(Document node1, Document node2) {
-                            return  Collections.frequency(result, node2);;
+                            return Collections.frequency(result, node2)- Collections.frequency(result, node1);
                         }
                     });
-
-
-                    Set<Document> hs = new HashSet<Document>();
-                    hs.addAll(result);
+                        property ="";
+                    }
                     result.clear();
-                    result.addAll(hs);
-                    if(property == "count"){
+                    result.addAll(b);
 
 
-                    }
-                    // if(str.length)
+
+
                     resetAll();
-                    if (j < str.length-1) {
-                        search(str, result,nodeResult, j + 1);
-                    }
-
                     return result;//out
 
                 } else {
-                    //nodeResult.add(nodList.get(f));
-                    System.out.println(nodList.get(f).attributes.occurrence+ " " +nodList.get(f).attributes.document );
+                  // if(result.contains(nodList.get(f).attributes.document))
                    result.add(nodList.get(f).attributes.document);
                     backup.add(nodList.get(f));
                     nodList.remove(f);
@@ -118,15 +114,10 @@ public class TinySearchEngine implements TinySearchEngineBase{
     public class Node{
         public Word word ;
         public Attributes attributes;
-        public Integer hashCode;
-        //public boolean check;
         public Node(Word word, Attributes attributes){
             this.word = word;
             this.attributes=attributes;
-            this.hashCode= word.hashCode();
-            //check= false;
         }
-
-
     }
+
 }
