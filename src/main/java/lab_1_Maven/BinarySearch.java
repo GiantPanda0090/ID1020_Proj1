@@ -45,12 +45,31 @@ public static int counter =0;
             // possible key indices in [lo, hi)
             if (hi <= lo) return -1;
             int mid = lo + (hi - lo) / 2;
-           //System.out.println(a.get(mid).word.word + " : "+ key);
+         //  System.out.println(a.get(mid).word.word + " : "+ key);
             int cmp = a.get(mid).word.word.compareTo(key);
             if      (cmp > 0) return search(key, a, lo, mid);
             else if (cmp < 0) return search(key, a, mid+1, hi);
-            else              return mid;
+            else {
+               // System.out.println(a.get(mid).word.word + " : "+ key);
+                return mid;
+            }
+            }
+    public static int searcharr(String key, String[] a) {return searcharr(key, a, 0, a.length);}
+    public static int searcharr(String key, String[] a, int lo, int hi) {
+        counter++;
+        // possible key indices in [lo, hi)
+        if (hi <= lo) return -1;
+        int mid = lo + (hi - lo) / 2;
+        //  System.out.println(a.get(mid).word.word + " : "+ key);
+        int cmp = a[mid].compareTo(key);
+        if      (cmp > 0) return searcharr(key, a, lo, mid);
+        else if (cmp < 0) return searcharr(key, a, mid+1, hi);
+        else {
+            // System.out.println(a.get(mid).word.word + " : "+ key);
+            return mid;
         }
+    }
+
 
 
 /*        // whitelist, exception filter
