@@ -69,6 +69,39 @@ public static int counter =0;
             return mid;
         }
     }
+    public static int sort(String key, ArrayList<TinySearchEngine.Node> a) {return sort(key, a, 0, a.size());}
+    public static int sort(String key,  ArrayList<TinySearchEngine.Node> a, int lo, int hi) {
+        counter++;
+        // possible key indices in [lo, hi)
+        if(hi==0){
+            return 0;
+        }
+        //  System.out.println(a.get(mid).word.word + " : "+ key);
+        if (hi <= lo){
+            return a.size() - 1;
+        }
+        int mid = lo + (hi - lo) / 2;
+        int cmp = a.get(mid).word.word.compareTo(key);
+
+        if (hi <= lo||hi<2) {
+            if (cmp < 0) {
+                return a.size() - 1;
+            }
+            ;
+            if (cmp > 0) {
+                return 0;
+            }
+            ;
+        }
+        else if (cmp > 0 && a.get(mid -1).word.word.compareTo(key) < 0){
+            // System.out.println(a.get(mid).word.word + " : "+ key);
+            return mid;
+        }
+        else if(cmp > 0) return sort(key, a, lo, mid);
+        else if (cmp < 0) return sort(key, a, mid+1, hi);
+            return mid+1;
+
+    }
 
 
 
