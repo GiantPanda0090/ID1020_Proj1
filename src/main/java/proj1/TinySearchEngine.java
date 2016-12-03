@@ -85,7 +85,6 @@ public class TinySearchEngine implements TinySearchEngineBase{
                         return result;
                     }
                 }
-
                 if (property.equals("occurrence")) {
                     Set<Attributes> hs = new HashSet<Attributes>(resultAtrr);
                     List<Attributes> b = new ArrayList<Attributes>(hs);
