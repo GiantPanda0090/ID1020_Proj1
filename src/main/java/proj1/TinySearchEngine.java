@@ -2,6 +2,7 @@ package proj1;
 
 
 import lab_1_Maven.BinarySearch;
+import lab_3.BubbleSort;
 import se.kth.id1020.TinySearchEngineBase;
 import se.kth.id1020.util.Attributes;
 import se.kth.id1020.util.Document;
@@ -88,11 +89,16 @@ public class TinySearchEngine implements TinySearchEngineBase{
                 if (property.equals("occurrence")) {
                     Set<Attributes> hs = new HashSet<Attributes>(resultAtrr);
                     List<Attributes> b = new ArrayList<Attributes>(hs);
-                    Collections.sort(b, new Comparator<Attributes>() {
+
+                    BubbleSort sort = new BubbleSort(b,result);
+                    List a =sort.sortOccu();
+                    b.clear();
+                    b.addAll(a);
+                   /* Collections.sort(b, new Comparator<Attributes>() {
                         public int compare(Attributes node1, Attributes node2) {
                             return node1.occurrence - node2.occurrence;
                         }
-                    });
+                    });*/
                     result.clear();
                     for (int resulti = 0; resulti < b.size(); resulti++) {
                         if(!result.contains(b.get(resulti).document)) {
@@ -103,20 +109,31 @@ public class TinySearchEngine implements TinySearchEngineBase{
                     Set<Document> hs = new HashSet<Document>(result);
                 List<Document> b = new ArrayList<Document>(hs);
 
-                if (property.equals("popularity")) {
+
+                    if (property.equals("popularity")) {
+                    BubbleSort sort = new BubbleSort(b,result);
+                        List a =sort.sortPopula();
+                        b.clear();
+                    b.addAll(a);
+                    }
+               /* if (property.equals("popularity")) {
                     Collections.sort(b, new Comparator<Document>() {
                         public int compare(Document node1, Document node2) {
                             return node1.popularity - node2.popularity;
                         }
                     });
-                }
+                }*/
                 //property sort
                 if (property.equals("count")) {
-                    Collections.sort(b, new Comparator<Document>() {
+                    BubbleSort sort = new BubbleSort(b,result);
+                    List a =sort.sortFreq();
+                    b.clear();
+                    b.addAll(a);
+                   /* Collections.sort(b, new Comparator<Document>() {
                         public int compare(Document node1, Document node2) {
                             return Collections.frequency(result, node1) - Collections.frequency(result, node2);
                         }
-                    });
+                    });*/
                 }
                 result.clear();
                 result.addAll(b);
