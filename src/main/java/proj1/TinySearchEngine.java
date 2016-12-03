@@ -38,6 +38,7 @@ public class TinySearchEngine implements TinySearchEngineBase{
         backup=new ArrayList<Node>(nodList);
        BinarySearch find = new BinarySearch();
         List<Document> result = new ArrayList<Document>();
+        List<Attributes> resultAtrr = new ArrayList<Attributes>();
         String[] str = s.split(" ");
         List<String> rebuild = new ArrayList<String>(Arrays.asList(str));
         resetAll();
@@ -54,6 +55,8 @@ public class TinySearchEngine implements TinySearchEngineBase{
                 rebuild.remove(rebuild.size()-2);
                 rebuild.remove(rebuild.size()-1);
                 str= rebuild.toArray(new String[str.length-2]);
+                System.out.println("No order has been specified for this property. Ascending order will be used");
+
             }else if(str[str.length-1].equals("orderby")){
                 System.err.println("orderby what?");
             }
@@ -64,40 +67,81 @@ public class TinySearchEngine implements TinySearchEngineBase{
             }
         });*/
 
-        return search(str, result,0,find);
+        return search(str, result,resultAtrr,0,find);
     }
-        public List<Document> search(String str[],  final List<Document> result,int j,BinarySearch find) {
+        public List<Document> search(String str[],  final List<Document> result, final List<Attributes> resultAtrr,int j,BinarySearch find) {
         //BinarySearch find = new BinarySearch();
             resetAll();
         for(int i =0;i<nodList.size();i++) {
-           //System.out.println(j);
-             int  f= find.search(str[j], nodList);
-                if (f == -1) {
-                    if(j<str.length-1) {
+            //System.out.println(j);
+            int f = find.search(str[j], nodList);
+            if (f == -1) {
+                if (str.length > 1) {
+                    if (j < str.length - 1) {
                         //resetAll();
-                        search(str, result, j + 1,find);
+                        search(str, result, resultAtrr, j + 1, find);
+                    } else if (j == str.length - 1) {
+                        return result;
                     }
-                    Set<Document> hs = new HashSet<Document>(result);
-                    List<Document> b = new ArrayList<Document>(hs);
+                }
 
-                    //property sort
-                       if (property.equals("count")) {
-                            Collections.sort(b, new Comparator<Document>() {
-                                public int compare(Document node1, Document node2) {
-                                    return Collections.frequency(result, node2) - Collections.frequency(result, node1);
-                                }
-                            });
-                            property = "";
-                            direction = "";
+                if (property.equals("occurrence")) {
+                    Set<Attributes> hs = new HashSet<Attributes>(resultAtrr);
+                    List<Attributes> b = new ArrayList<Attributes>(hs);
+                    Collections.sort(b, new Comparator<Attributes>() {
+                        public int compare(Attributes node1, Attributes node2) {
+                            return node1.occurrence - node2.occurrence;
                         }
-                        result.clear();
-                        result.addAll(b);
-                        resetAll();
-                        return result;//out
+                    });
+                    result.clear();
+                    for (int resulti = 0; resulti < b.size(); resulti++) {
+                        if(!result.contains(b.get(resulti).document)) {
+                            result.add(b.get(resulti).document);
+                        }
+                    }
+                } else{
+                    Set<Document> hs = new HashSet<Document>(result);
+                List<Document> b = new ArrayList<Document>(hs);
 
+                if (property.equals("popularity")) {
+                    Collections.sort(b, new Comparator<Document>() {
+                        public int compare(Document node1, Document node2) {
+                            return node1.popularity - node2.popularity;
+                        }
+                    });
+                }
+                //property sort
+                if (property.equals("count")) {
+                    Collections.sort(b, new Comparator<Document>() {
+                        public int compare(Document node1, Document node2) {
+                            return Collections.frequency(result, node1) - Collections.frequency(result, node2);
+                        }
+                    });
+                }
+                result.clear();
+                result.addAll(b);
+            }
+             //property sort end
+
+                //direction
+                if(direction.equals("desc")){
+                    System.out.println("Descending order will be applied");
+                    Collections.reverse(result);//reverse result
+                }else  if(direction.equals("asec")){
+                    System.out.println("Ascending order will be applied");
+                }
+
+                //resetALL
+                property = "";
+                direction = "";
+            resetAll();
+                break;
                 } else {
-                  // if(result.contains(nodList.get(f).attributes.document))
-                   result.add(nodList.get(f).attributes.document);
+                if  (property.equals("occurrence")) {
+                    resultAtrr.add(nodList.get(f).attributes);
+                }else {
+                    result.add(nodList.get(f).attributes.document);
+                }
                     backup.add(nodList.get(f));
                     nodList.remove(f);
                 }
